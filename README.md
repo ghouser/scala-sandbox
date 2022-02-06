@@ -1,6 +1,14 @@
 # Sandbox for Scala Functions
 * `object Main` is a runner
 * `object Challenges` are functions to solve code challenges
+* `Challenge Spec` contains unit tests against challenges
+
+## Quickstart
+Docker with Makefile
+* `make build` - create Docker image
+* `make test` - runs `sbt test`
+
+See `Makefile` for additional commands.
 
 # Cheatsheet
 Common scala "gotchas".
