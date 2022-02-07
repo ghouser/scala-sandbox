@@ -21,7 +21,9 @@ Map and List can be upserted with `updated`
 * Map -> updated(key, value)
 * List -> updated(possition, value)
 
-Concatenate list with `++`
+Modify list:
+* Concatenate list with `++`
+* Add to end of list with `appended`
 
 ### Fold Left
 FoldLeft(Accumulator Start Value) { (accumulator:Type, currentValue)
@@ -29,8 +31,13 @@ FoldLeft(Accumulator Start Value) { (accumulator:Type, currentValue)
 * current value matches type from inside the folded collection
   * e.g. `l.FoldLeft("") { (acc:String, c) => { func } }`
   
-### take
-takes the first n elements
-
-###
+### Slice & Sub-Collections
+slice(firstIndex, lastIndex)
+* returns sub-collection between first and last index
+* similar:
+  * `take` - returns first n elements
+  * `drop` - removes first n elements
+  * `head` - returns first element
+  * `tail` - returns everything after the first element
+  * `last` - returns the last element
   

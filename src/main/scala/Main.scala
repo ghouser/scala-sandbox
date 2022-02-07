@@ -1,10 +1,12 @@
 import scala.collection.immutable._
+import scala.annotation.tailrec
 import scala.math._
 import java.time._
-import scala.annotation.tailrec
 
 object Main extends App{
 
+  // wrapping the call to instant in a method enables by-name reference
+  // by-name reference will evaluate when called, rather than holding a value
   def currentTimeSeconds:Long = {
     Instant.now.toEpochMilli / 1000
   }
@@ -204,10 +206,11 @@ object Challenges {
        (acc, x) => {
           val jumped=jump(x._2,x._1)
           // if we jump to 0, we're trapped, return -1 for stuck
+          // could return nil, but knowing number of paths that lead to stuck could be interesting
           if(jumped.isEmpty) acc ++ List(-1)
           // if we made it to the end, return the total jumps
           else if(jumped.last._2 == l.length-1) acc ++ List(totalJumps)
-          // otherwise, do the jumps again
+          // otherwise, jump again
           else doJumps(jumped,totalJumps+1)
         }
       }
@@ -216,6 +219,7 @@ object Challenges {
     val checkOutput = doJumps(jump(0,z.head._1),1)
     // it's possible that there's NO way to get to the end (always landed on zero)
     // if checkout only contains -1, return -1
+    // would be simpler if doJumps returned nil on stuck
     if(!checkOutput.exists(_ != -1)) -1
     else checkOutput.filter(_ != -1).min
   }
