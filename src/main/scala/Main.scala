@@ -3,6 +3,8 @@ import scala.annotation.tailrec
 import scala.math._
 import java.time._
 
+import Data._
+
 object Main extends App{
 
   // wrapping the call to instant in a method enables by-name reference
@@ -10,19 +12,6 @@ object Main extends App{
   def currentTimeSeconds:Long = {
     Instant.now.toEpochMilli / 1000
   }
-
-  println("let's get started!")
-  println(Challenges.reverseString("turnmearound",0))
-  println(Challenges.removeChar("takeoutas",'a'))
-
-  // if 10 calls w/in 2 seconds, error, expect final output to be false
-  for (t <- 1 to 11){
-    println(Challenges.limit(1,currentTimeSeconds))
-  }
-  println(Challenges.longestSub(List(1,3,4,2,5,1,7)))
-  println(Challenges.findArea(List(1,8,6,2,5,4,8,3,7),0,0))
-  println(Challenges.threeSum(List(-1,0,1,2,-1,-4)))
-  println(Challenges.jumpGame(List(2,3,1,1,4,2,3,0,1,4)))
 
 }
 
@@ -66,10 +55,10 @@ object Challenges {
   * returns FALSE if user has called the function more than 10 times in the last 2 seconds
   */
   // map to store calls to function
-  var userCalls: Map[Int, List[Long]] = Map[Int, List[Long]]()
+  val userCalls:UserCalls = UserCalls(Map[Int, List[Long]]())
   // function to check map and update list of past requests
   def limit (userId: Int, timeStamp: Long):Boolean = {
-    val oldRequests = userCalls.getOrElse(userId, List.empty[Long])
+    val oldRequests = userCalls.calls.getOrElse(userId, List.empty[Long])
     // if firstReq is empty, set it to current timeStamp, else get the oldest request
     val firstReq: Long = if(oldRequests.isEmpty) timeStamp else oldRequests.min
 
@@ -78,12 +67,12 @@ object Challenges {
       val totalCalls = oldRequests ++ List(timeStamp)
       if (totalCalls.length > 10) false
       else {
-        userCalls = userCalls.updated(userId, totalCalls)
+        userCalls.calls = userCalls.calls.updated(userId, totalCalls)
         true
       }
     }
     else {
-      userCalls = userCalls.updated(userId,List(timeStamp))
+      userCalls.calls = userCalls.calls.updated(userId,List(timeStamp))
       true
     }
   }
