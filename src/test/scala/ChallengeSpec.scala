@@ -42,4 +42,113 @@ class ChallengeSpec extends AnyFlatSpec{
     Challenges.jumpGame(List(2,3,1,1,4,2,3,0,1,4)) shouldBe 4
   }
 
+  "Challenge.checkZoo" should "for a list of lists representing a zoo grid, ensure certain animals are not adjacent" in {
+    val zooTest = List(
+      List("", "", "", "", ""),
+      List("", "", "elephant", "snake", ""),
+      List("", "", "mongoose", "", ""),
+      List("", "mouse", "", "elephant", ""),
+      List("", "", "", "", "")
+    )
+    Challenges.checkZoo(zooTest) shouldBe false
+  }
+  it should "not let mongoose be near snake" in {
+    val zooTest = List(
+      List("", "", "", "", ""),
+      List("", "mongoose", "", "", ""),
+      List("", "", "snake", "", ""),
+      List("", "", "", "", ""),
+      List("", "", "", "", "")
+    )
+    Challenges.checkZoo(zooTest) shouldBe false
+  }
+  it should "not let snake be near mouse" in {
+    val zooTest = List(
+      List("", "",      "",      "", ""),
+      List("", "mouse", "",      "", ""),
+      List("", "",      "snake", "", ""),
+      List("", "",      "",      "", ""),
+      List("", "",      "",      "", "")
+    )
+    Challenges.checkZoo(zooTest) shouldBe false
+  }
+  it should "not let elephant be near mouse" in {
+    val zooTest = List(
+      List("", "",      "",         "", ""),
+      List("", "mouse", "",         "", ""),
+      List("", "",      "elephant", "", ""),
+      List("", "",      "",         "", ""),
+      List("", "",      "",         "", "")
+    )
+    Challenges.checkZoo(zooTest) shouldBe false
+  }
+  it should "allow for a valid zoo" in {
+    val zooTest = List(
+      List("", "",      "",         "",         ""),
+      List("", "",      "elephant", "",         ""),
+      List("", "",      "mongoose", "",         ""),
+      List("", "mouse", "",         "elephant", ""),
+      List("", "",      "",         "",         "")
+    )
+    Challenges.checkZoo(zooTest) shouldBe true
+  }
+  it should "not let snake be near mouse in a more complex zoo" in {
+    val zooTest = List(
+      List("", "",      "",         "",         ""),
+      List("", "",      "elephant", "",         ""),
+      List("", "",      "snake",    "",         ""),
+      List("", "mouse", "",         "elephant", ""),
+      List("", "",      "",         "",         "")
+    )
+    Challenges.checkZoo(zooTest) shouldBe false
+  }
+  it should "allow for an all single animal zoo" in {
+    val zooTest = List(
+      List("snake","snake","snake","snake","snake"),
+      List("snake","snake","snake","snake","snake"),
+      List("snake","snake","snake","snake","snake"),
+      List("snake","snake","snake","snake","snake"),
+      List("snake","snake","snake","snake","snake")
+    )
+    Challenges.checkZoo(zooTest) shouldBe true
+  }
+  it should "not allow mongoose near snake in a full zoo" in {
+    val zooTest = List(
+      List("snake","snake","snake","snake","snake"),
+      List("mouse","snake","snake","snake","elephant"),
+      List("mouse","snake","snake","snake","elephant"),
+      List("mouse","snake","snake","snake","elephant"),
+      List("mongoose","mongoose","mongoose","mongoose","mongoose")
+    )
+    Challenges.checkZoo(zooTest) shouldBe false
+  }
+  it should "allow for a single animal zoo" in {
+    val zooTest = List(
+      List("snake")
+    )
+    Challenges.checkZoo(zooTest) shouldBe true
+  }
+  it should "not allow mongoose near snake in a single row zoo" in {
+    val zooTest = List(
+      List("snake", "mongoose")
+    )
+    Challenges.checkZoo(zooTest) shouldBe false
+  }
+  it should "not allow mongoose near snake in a single column zoo" in {
+    val zooTest = List(
+      List("snake"),
+      List("mongoose")
+    )
+    Challenges.checkZoo(zooTest) shouldBe false
+  }
+  it should "allow snake an mongoose on the same row, but not near" in {
+    val zooTest = List(
+      List("",      "", ""),
+      List("",      "", ""),
+      List("snake", "", "mongoose"),
+      List("",      "", ""),
+      List("",      "", "")
+    )
+    Challenges.checkZoo(zooTest) shouldBe true
+  }
 }

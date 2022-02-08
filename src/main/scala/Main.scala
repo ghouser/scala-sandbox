@@ -23,6 +23,7 @@ object Main extends App{
   println(Challenges.findArea(List(1,8,6,2,5,4,8,3,7),0,0))
   println(Challenges.threeSum(List(-1,0,1,2,-1,-4)))
   println(Challenges.jumpGame(List(2,3,1,1,4,2,3,0,1,4)))
+
 }
 
 object Challenges {
@@ -222,6 +223,71 @@ object Challenges {
     // would be simpler if doJumps returned nil on stuck
     if(!checkOutput.exists(_ != -1)) -1
     else checkOutput.filter(_ != -1).min
+  }
+
+  def checkZoo(zoo:List[List[String]]):Boolean = {
+
+    // I don't want to make index out of bounds calls
+    def inBounds (index:Int, list:List[Any]):Boolean =
+    {
+      (index >= 0) && (index < list.length)
+    }
+
+    // checking that a given animal is not near another animal
+    // need to check index-1, index, index+1, repeat for next and previous row
+    def validLocation(zoo:List[List[String]],row:Int, col:Int):Boolean = {
+      val animal = zoo(row)(col)
+      // if nothing there, return true
+      if (animal == "") true
+      // 8 checks, start row -1
+      else {
+        validNeighbor(animal,getNeighbor(zoo,row-1,col-1)) &&
+          validNeighbor(animal,getNeighbor(zoo,row-1,col)) &&
+          validNeighbor(animal,getNeighbor(zoo,row-1,col+1)) &&
+          validNeighbor(animal,getNeighbor(zoo,row,col-1)) &&
+          validNeighbor(animal,getNeighbor(zoo,row,col+1)) &&
+          validNeighbor(animal,getNeighbor(zoo,row+1,col-1)) &&
+          validNeighbor(animal,getNeighbor(zoo,row+1,col)) &&
+          validNeighbor(animal,getNeighbor(zoo,row+1,col+1))
+      }
+    }
+
+    // gets a neighbor, checking for for in bounds
+    def getNeighbor(zoo:List[List[String]],row:Int, col:Int):String = {
+      if (inBounds(row,zoo)){
+        if (inBounds(col,zoo(row))) zoo(row)(col)
+        else ""
+      }
+      else ""
+    }
+
+    // simple way to check two sides
+    def validNeighbor(animalOne:String, animalTwo:String):Boolean = {
+      // let's put the animals in a list, then sort, so we don't care which one was given to this function first.
+      val animals = List(animalOne,animalTwo).sorted
+      if (animals(0) == "mongoose" && animals(1) == "snake") false
+      else if (animals(0) == "mouse" && animals(1) == "snake") false
+      else if (animals(0) == "elephant" && animals(1) == "mouse") false
+      else true
+    }
+
+    // zipWithIndex makes list tuple with index, zip._1 is value zip._2 is index
+    val zipZoo = zoo.zipWithIndex
+
+    // let's go through the zoo
+    !zipZoo.foldLeft(List.empty[Boolean]) {
+      (acc, row) => {
+        // acc is the accumulator for the fold
+        // it's a list of booleans we can check for output when done
+        // curRow._1 is the current row of the zoo, should be a List[String]
+        acc ++ row._1.zipWithIndex.foldLeft(List.empty[Boolean]) {
+          (in_acc, col) => {
+            in_acc ++ List(validLocation(zoo,row._2,col._2))
+          }
+        }
+      }
+      // contains false returns TRUE if a false is found, so ! at the beginning
+    }.contains(false)
   }
 
 }

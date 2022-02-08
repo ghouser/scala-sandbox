@@ -41,3 +41,23 @@ slice(firstIndex, lastIndex)
   * `tail` - returns everything after the first element
   * `last` - returns the last element
   
+## CoderPad
+Quickstart code with a test suite:
+```scala
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should.Matchers._
+
+class SolutionSpec extends AnyFlatSpec{
+  "Methody Dummy" should "return 1" in {
+    Solution.dummy() shouldBe 1
+  }
+}
+
+object Solution extends App {
+  def dummy():Int = {
+    1
+  }
+  
+  new SolutionSpec().execute()
+}
+```
